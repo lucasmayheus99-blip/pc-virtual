@@ -1,0 +1,61 @@
+name: PC Virtual Potente
+
+on:
+  workflow_dispatch:
+
+jobs:
+  pc-virtual:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Atualizar sistema
+        run: |
+          sudo apt update
+          sudo apt upgrade -y
+
+      - name: Instalar ferramentas
+        run: |
+          sudo apt install -y \
+            git \
+            curl \
+            wget \
+            unzip \
+            7zip \
+            htop \
+            neofetch \
+            python3 \
+            python3-pip
+
+      - name: Mostrar hardware disponível
+        run: |
+          echo "===== CPU ====="
+          lscpu
+
+          echo "===== MEMÓRIA ====="
+          free -h
+
+          echo "===== DISCO ====="
+          df -h
+
+          echo "===== GPU ====="
+          lspci | grep -Ei "vga|3d|display" || true
+
+      - name: Informações do sistema
+        run: |
+          echo "===== SISTEMA ====="
+          uname -a
+          echo
+          neofetch
+
+      - name: Teste de desempenho
+        run: |
+          python3 - <<'PY'
+          import os
+          import platform
+
+          print("=== PC VIRTUAL ===")
+          print("Sistema:", platform.system())
+          print("Kernel:", platform.release())
+          print("CPU:", os.cpu_count(), "threads disponíveis")
+          print("Arquitetura:", platform.machine())
+          PY
